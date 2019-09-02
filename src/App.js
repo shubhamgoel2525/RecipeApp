@@ -1,24 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import Recipe from './Recipe';
 import './App.css';
+import 'font-awesome/css/font-awesome.min.css';
 
-function App() {
+const App = () => {
+  const APP_ID = '57c114fd';
+  const APP_KEY = '434ac95d08894c11aa0a21380b212617';
+
+  const [recipes, setRecipes] = useState([]);
+  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState('mix');
+
+  useEffect(() => {
+    getRecipes();
+  }, [query]);
+
+  const getRecipes = async () => {
+    const response = await fetch(`https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`);
+    const data = await response.json();
+    setRecipes(data.hits);
+    console.log(data.hits);
+  }
+
+  const updateSearch = e => {
+    setSearch(e.target.value);
+  }
+
+  const getSearch = e => {
+    e.preventDefault();
+    setQuery(search);
+    setSearch('');
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <form onSubmit={getSearch} className="search-form">
+        <input className="search-bar" type="text" value={search} placeholder="Search for a recipe . . . " onChange={updateSearch} />
+        <button
+          className="search-button"
+          type="submit"
         >
-          Learn React
-        </a>
-      </header>
+        <span className="fa fa-search"></span>&nbsp;
+          Search
+        </button>
+      </form>
+      <div className="recipes">
+        {recipes.map(recipe => (
+          <Recipe
+            key={recipe.recipe.label}
+            title={recipe.recipe.label}
+            calories={recipe.recipe.calories}
+            image={recipe.recipe.image}
+            ingredients={recipe.recipe.ingredients}
+          />
+        ))}
+      </div>
     </div>
   );
 }
