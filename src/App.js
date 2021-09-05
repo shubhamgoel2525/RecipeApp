@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import "font-awesome/css/font-awesome.min.css";
+import "@fortawesome/fontawesome-free/css/all.css";
 
 import "./App.css";
 
@@ -47,7 +47,7 @@ const App = () => {
         />
 
         <button className="search-button" type="submit">
-          <span className="fa fa-search"></span>&nbsp; Search
+          <span className="fas fa-search" />&nbsp; Search
         </button>
       </form>
 
